@@ -1,7 +1,7 @@
 const app = require("express")();
 const http = require("http").createServer(app);
 const socketio = require("socket.io")(http);
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
 socketio.on("connection", (userSocket) => {
   console.log("onConnection...");
   userSocket.on("message", (data) => {
+    console.log("on message :: ");
     userSocket.emit("message", data);
   });
 
