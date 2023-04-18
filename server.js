@@ -3,7 +3,7 @@ const http = require("http").createServer(app);
 const socketio = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 
-const users = {};
+const users = [];
 
 // app.get("/", (req, res) => {
 //   res.send(`Server is running ${port}`);
@@ -51,9 +51,9 @@ socketio.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
     const userId = Object.keys(users).find((key) => users[key] === socket.id);
-    if (userId) {
-      delete users[userId];
-    }
+    // if (userId) {
+    //   delete users[userId];
+    // }
   });
 });
 
