@@ -51,9 +51,9 @@ socketio.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${socket.id}`);
     const userId = Object.keys(users).find((key) => users[key] === socket.id);
-    // if (userId) {
-    //   delete users[userId];
-    // }
+    if (userId) {
+      delete users[userId];
+    }
   });
 });
 
