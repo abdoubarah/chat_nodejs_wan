@@ -5,46 +5,33 @@ const port = process.env.PORT || 3000;
 
 const users = [];
 
-// app.get("/", (req, res) => {
-//   res.send(`Server is running ${port}`);
-// });
-
-// socketio.on("connection", (userSocket) => {
-//   console.log("onConnection...");
-
-//   userSocket.on("newChat", (data) => {
-//     chatList.push(data);
-//     userSocket.emit("chat", chatList);
-//     console.log("on message :: ", data);
-//   });
-
-//   userSocket.on("typing", (data) => {
-//     userSocket.emit("typing", data);
-//   });
-
-//   userSocket.on("stop_typing", (data) => {
-//     userSocket.emit("stop_typing", data);
-//   });
-// });
-
-// http.listen(port);
+app.get("/", (req, res) => {
+  res.send(`Server is running ${port}`);
+});
 
 socketio.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
   // Register user
   socket.on("registerUser", (userId) => {
-    console.log(`User registered: ${userId}`);
-    users[userId] = socket.id;
+    console.log(`User registered: ${userId} + socketid : ${socket.id}`);
+    users.push({
+      userId: userId,
+      socketId: socket.id,
+    });
   });
 
   // Send message
   socket.on("sendMessage", ({ senderId, receiverId, message }) => {
     console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
-    const receiverSocketId = users[receiverId];
-    if (receiverSocketId) {
-      socket.to(receiverSocketId).emit("receiveMessage", { senderId, message });
-    }
+    // const receiverSocketId = users.find(
+    //   (user) => user.userId === receiverId
+    // ).socketId;
+    // if (receiverSocketId) {
+    //   socket.broadcast
+    //     .to(receiverSocketId)
+    //     .emit("receiveMessage", { senderId, message });
+    // }
   });
 
   // Disconnect user
