@@ -28,6 +28,7 @@ socketio.on("connection", (socket) => {
       (user) => user.userId === receiverId
     ).socketId;
     if (receiverSocketId) {
+      console.log(`emit receiveMessage ${receiverSocketId}`);
       socket.to(receiverSocketId).emit("receiveMessage", { senderId, message });
     }
   });
