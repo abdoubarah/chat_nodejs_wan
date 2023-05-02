@@ -28,9 +28,7 @@ socketio.on("connection", (socket) => {
       (user) => user.userId === receiverId
     ).socketId;
     if (receiverSocketId) {
-      socket.broadcast
-        .to(receiverSocketId)
-        .emit("receiveMessage", { senderId, message });
+      socket.to(receiverSocketId).emit("receiveMessage", { senderId, message });
     }
   });
 
