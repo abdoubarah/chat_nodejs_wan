@@ -22,14 +22,14 @@ socketio.on("connection", (socket) => {
   });
 
   // Send message
-  socket.on("sendMessage", ({ senderId, receiverId, message }) => {
-    console.log(`Message sent from ${senderId} to ${receiverId}: ${message}`);
+  socket.on("sendMessage", ({ sender, receiver, msg }) => {
+    console.log(`Message sent from ${sender} to ${receiver}: ${msg}`);
     const receiverSocketId = users.find(
-      (user) => user.userId === receiverId
+      (user) => user.userId === receiver
     ).socketId;
     if (receiverSocketId) {
       console.log(`emit receiveMessage ${receiverSocketId}`);
-      socket.to(receiverSocketId).emit("receiveMessage", { senderId, message });
+      socket.to(receiverSocketId).emit("receiveMessage", { sender, msg });
     }
   });
 
