@@ -23,7 +23,9 @@ socketio.on("connection", (socket) => {
 
   // Send message
   socket.on("sendMessage", ({ sender, receiver, type, msg, sent_time }) => {
-    console.log(`Message sent from ${sender} to ${receiver}: ${msg}`);
+    console.log(
+      `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time} `
+    );
     const receiverSocketId = users.find(
       (user) => user.userId === receiver
     ).socketId;
