@@ -28,7 +28,8 @@ socketio.on("connection", (socket) => {
     );
     const receiverSocketId = users.find(
       (user) => user.userId === receiver
-    ).socketId;
+    )?.socketId;
+    console.log(`receiverSocketId ${receiverSocketId}`);
     if (receiverSocketId) {
       console.log(`emit receiveMessage ${receiverSocketId}`);
       socket
