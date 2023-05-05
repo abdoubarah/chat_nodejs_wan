@@ -13,7 +13,7 @@ socketio.on("connection", (socket) => {
   // Register user
   socket.on("registerUser", (userId) => {
     console.log(`User registered: ${userId} + socketid : ${socket.id}`);
-    const usr = users.find((user) => user.userId === user_id).userId;
+    const usr = users.find((user) => user.userId === userId).userId;
     delete users[usr];
     users.push({
       userId: userId,
