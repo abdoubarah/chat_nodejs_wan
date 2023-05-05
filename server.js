@@ -11,8 +11,8 @@ app.get("/", (req, res) => {
 
 socketio.on("connection", (socket) => {
   // Register user
-  socket.on("registerUser", (userId) => {
-    console.log(`User registered: ${userId} + socketid : ${socket.id}`);
+  socket.on("userConnected", (userId) => {
+    console.log(`userConnected id : ${userId} + socketid : ${socket.id}`);
     if (users.length > 0) {
       var usr = users.find((user) => user.userId === userId);
       if (usr) {
