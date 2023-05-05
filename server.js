@@ -10,8 +10,6 @@ app.get("/", (req, res) => {
 });
 
 socketio.on("connection", (socket) => {
-  console.log(`User connected: ${socket.id}`);
-
   // Register user
   socket.on("registerUser", (userId) => {
     console.log(`User registered: ${userId} + socketid : ${socket.id}`);
@@ -26,7 +24,7 @@ socketio.on("connection", (socket) => {
     console.log(
       `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time} `
     );
-    const receiverSocketId = users.find(
+    var receiverSocketId = users.find(
       (user) => user.userId === receiver
     )?.socketId;
     console.log(`receiverSocketId ${receiverSocketId}`);
