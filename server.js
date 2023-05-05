@@ -14,8 +14,10 @@ socketio.on("connection", (socket) => {
   socket.on("registerUser", (userId) => {
     console.log(`User registered: ${userId} + socketid : ${socket.id}`);
     if (users.length > 0) {
-      const usr = users.find((user) => user.userId === userId).userId;
-      delete users[usr];
+      var usr = users.find((user) => user.userId === userId);
+      if (usr) {
+        delete users[usr.userId];
+      }
     }
     users.push({
       userId: userId,
