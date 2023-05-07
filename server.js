@@ -3,7 +3,7 @@ const http = require("http").createServer(app);
 const socketio = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 
-const users = [];
+var users = [];
 
 app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
@@ -15,14 +15,24 @@ socketio.on("connection", (socket) => {
     console.log(`userConnected id : ${userId} + socketid : ${socket.id}`);
     if (users.length > 0) {
       var usr = users.find((user) => user.userId === userId);
-      if (!usr) {
+      console.log(`usr : ${usr}`);
+      if (usr == undefined) {
         users.push({
           userId: userId,
           socketId: socket.id,
         });
       } else {
-        delete users[usr.userId];
+        users = users.filter((obj) => obj.userId !== usr.userId);
+        users.push({
+          userId: userId,
+          socketId: socket.id,
+        });
       }
+    } else {
+      users.push({
+        userId: userId,
+        socketId: socket.id,
+      });
     }
   });
 
@@ -31,7 +41,9 @@ socketio.on("connection", (socket) => {
     "sendMessage",
     ({ sender, receiver, type, msg, sent_time, gift }) => {
       console.log(
-        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time}  / ${gift}`
+        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time}  / ${JSON.stringify(
+          gift
+        )}`
       );
       var receiverSocketId = users.find(
         (user) => user.userId === receiver
