@@ -29,14 +29,7 @@ socketio.on("connection", (socket) => {
   // Send message
   socket.on(
     "sendMessage",
-    ({
-      sender,
-      receiver,
-      type,
-      msg,
-      sent_time,
-      gift: { id, coins, img_url, status },
-    }) => {
+    ({ sender, receiver, type, msg, sent_time, gift }) => {
       console.log(
         `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time}  / ${gift}`
       );
@@ -52,12 +45,7 @@ socketio.on("connection", (socket) => {
           type,
           msg,
           sent_time,
-          gift: {
-            id,
-            coins,
-            img_url,
-            status,
-          },
+          gift,
         });
       }
     }
