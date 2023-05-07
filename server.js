@@ -15,32 +15,53 @@ socketio.on("connection", (socket) => {
     console.log(`userConnected id : ${userId} + socketid : ${socket.id}`);
     if (users.length > 0) {
       var usr = users.find((user) => user.userId === userId);
-      if (usr) {
+      if (!usr) {
+        users.push({
+          userId: userId,
+          socketId: socket.id,
+        });
+      } else {
         delete users[usr.userId];
       }
     }
-    users.push({
-      userId: userId,
-      socketId: socket.id,
-    });
   });
 
   // Send message
-  socket.on("sendMessage", ({ sender, receiver, type, msg, sent_time }) => {
-    console.log(
-      `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time} `
-    );
-    var receiverSocketId = users.find(
-      (user) => user.userId === receiver
-    )?.socketId;
-    console.log(`receiverSocketId ${receiverSocketId}`);
-    if (receiverSocketId) {
-      console.log(`emit receiveMessage ${receiverSocketId}`);
-      socket
-        .to(receiverSocketId)
-        .emit("receiveMessage", { sender, receiver, type, msg, sent_time });
+  socket.on(
+    "sendMessage",
+    ({
+      sender,
+      receiver,
+      type,
+      msg,
+      sent_time,
+      gift: { id, coins, img_url, status },
+    }) => {
+      console.log(
+        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time} `
+      );
+      var receiverSocketId = users.find(
+        (user) => user.userId === receiver
+      )?.socketId;
+      console.log(`receiverSocketId ${receiverSocketId}`);
+      if (receiverSocketId) {
+        console.log(`emit receiveMessage ${receiverSocketId}`);
+        socket.to(receiverSocketId).emit("receiveMessage", {
+          sender,
+          receiver,
+          type,
+          msg,
+          sent_time,
+          gift: {
+            id,
+            coins,
+            img_url,
+            status,
+          },
+        });
+      }
     }
-  });
+  );
 
   // Disconnect user
   socket.on("disconnect", (user_id) => {
