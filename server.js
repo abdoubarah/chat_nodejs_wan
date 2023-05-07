@@ -38,7 +38,7 @@ socketio.on("connection", (socket) => {
       gift: { id, coins, img_url, status },
     }) => {
       console.log(
-        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time} `
+        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time}  / ${gift}`
       );
       var receiverSocketId = users.find(
         (user) => user.userId === receiver
