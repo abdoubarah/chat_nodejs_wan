@@ -39,9 +39,9 @@ socketio.on("connection", (socket) => {
   // Send message
   socket.on(
     "sendMessage",
-    ({ sender, receiver, type, msg, sent_time, gift }) => {
+    ({ sender, receiver, type, msg, media_url, sent_time, gift }) => {
       console.log(
-        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${sent_time}  / ${JSON.stringify(
+        `sendMSG :  ${sender} / ${receiver} / ${type} /  ${msg} /  ${media_url} /  ${sent_time}  / ${JSON.stringify(
           gift
         )}`
       );
@@ -56,6 +56,7 @@ socketio.on("connection", (socket) => {
           receiver,
           type,
           msg,
+          media_url,
           sent_time,
           gift,
         });
