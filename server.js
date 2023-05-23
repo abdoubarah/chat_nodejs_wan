@@ -33,6 +33,7 @@ socketio.on("connection", (socket) => {
         socketId: socket.id,
       });
     }
+    socket.broadcast.emit("onlineUsers", users);
   });
 
   // Send message
