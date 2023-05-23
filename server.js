@@ -10,27 +10,26 @@ app.get("/", (req, res) => {
 });
 
 socketio.on("connection", (socket) => {
-  // Register user
-  socket.on("userConnected", (userId) => {
-    console.log(`userConnected id : ${userId} + socketid : ${socket.id}`);
+  socket.on("userConnected", (userData) => {
+    console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
     if (users.length > 0) {
-      var usr = users.find((user) => user.userId === userId);
+      var usr = users.find((user) => user.userData.idUser === userData.idUser);
       console.log(`usr : ${usr}`);
       if (usr == undefined) {
         users.push({
-          userId: userId,
+          userData: userData,
           socketId: socket.id,
         });
       } else {
-        users = users.filter((obj) => obj.userId !== usr.userId);
+        users = users.filter((obj) => obj.userData.idUser !== userData.idUser);
         users.push({
-          userId: userId,
+          userData: userData,
           socketId: socket.id,
         });
       }
     } else {
       users.push({
-        userId: userId,
+        userData: userData,
         socketId: socket.id,
       });
     }
@@ -46,7 +45,7 @@ socketio.on("connection", (socket) => {
         )}`
       );
       var receiverSocketId = users.find(
-        (user) => user.userId === receiver
+        (user) => user.userData.idUser === receiver
       )?.socketId;
       console.log(`receiverSocketId ${receiverSocketId}`);
       if (receiverSocketId) {
@@ -65,7 +64,7 @@ socketio.on("connection", (socket) => {
   );
 
   // Disconnect user
-  socket.on("disconnect", (user_id) => {
+  socket.on("disconnect", (userData) => {
     // console.log(`User disconnected: ${socket.id}`);
     // const userId = users.find((user) => user.userId === user_id).userId;
     // if (userId) {
