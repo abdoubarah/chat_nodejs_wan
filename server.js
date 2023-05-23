@@ -33,6 +33,7 @@ socketio.on("connection", (socket) => {
         socketId: socket.id,
       });
     }
+    console.log(`emit onlineUsers ${users}`);
     socket.broadcast.emit("onlineUsers", users);
   });
 
