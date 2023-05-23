@@ -13,30 +13,30 @@ socketio.on("connection", (socket) => {
   socket.on("userConnected", (userData) => {
     console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
     if (users.length > 0) {
-      var usr = users.find((user) => user.userData.idUser === userData.idUser);
+      var usr = users.find((user) => user.idUser === userData.idUser);
       if (usr == undefined) {
         users.push({
-          userData: userData,
+          userData,
           socketId: socket.id,
         });
         console.log(`emit onlineUsers 3 ${users}`);
-        socket.broadcast.emit("userConnected", users);
+        socket.broadcast.emit("onlineUsers", users);
       } else {
-        users = users.filter((obj) => obj.userData.idUser !== userData.idUser);
+        users = users.filter((obj) => obj.idUser !== userData.idUser);
         users.push({
-          userData: userData,
+          userData,
           socketId: socket.id,
         });
         console.log(`emit onlineUsers 2 ${users}`);
-        socket.broadcast.emit("userConnected", users);
+        socket.broadcast.emit("onlineUsers", users);
       }
     } else {
       users.push({
-        userData: userData,
+        userData,
         socketId: socket.id,
       });
       console.log(`emit onlineUsers 1 ${users}`);
-      socket.broadcast.emit("userConnected", users);
+      socket.broadcast.emit("onlineUsers", users);
     }
   });
 
@@ -50,7 +50,7 @@ socketio.on("connection", (socket) => {
         )}`
       );
       var receiverSocketId = users.find(
-        (user) => user.userData.idUser === receiver
+        (user) => user.idUser === receiver
       )?.socketId;
       console.log(`receiverSocketId ${receiverSocketId}`);
       if (receiverSocketId) {
