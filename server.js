@@ -20,21 +20,22 @@ socketio.on("connection", (socket) => {
           userData: userData,
           socketId: socket.id,
         });
+        socket.broadcast.emit("onlineUsers", users);
       } else {
         users = users.filter((obj) => obj.userData.idUser !== userData.idUser);
         users.push({
           userData: userData,
           socketId: socket.id,
         });
+        socket.broadcast.emit("onlineUsers", users);
       }
     } else {
       users.push({
         userData: userData,
         socketId: socket.id,
       });
+      socket.broadcast.emit("onlineUsers", users);
     }
-    console.log(`emit onlineUsers ${users}`);
-    socket.broadcast.emit("onlineUsers", users);
   });
 
   // Send message
