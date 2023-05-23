@@ -14,12 +14,12 @@ socketio.on("connection", (socket) => {
     console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
     if (users.length > 0) {
       var usr = users.find((user) => user.userData.idUser === userData.idUser);
-      console.log(`usr : ${usr}`);
       if (usr == undefined) {
         users.push({
           userData: userData,
           socketId: socket.id,
         });
+        console.log(`emit onlineUsers 3 ${users}`);
         socket.broadcast.emit("onlineUsers", users);
       } else {
         users = users.filter((obj) => obj.userData.idUser !== userData.idUser);
@@ -27,6 +27,7 @@ socketio.on("connection", (socket) => {
           userData: userData,
           socketId: socket.id,
         });
+        console.log(`emit onlineUsers 2 ${users}`);
         socket.broadcast.emit("onlineUsers", users);
       }
     } else {
@@ -34,6 +35,7 @@ socketio.on("connection", (socket) => {
         userData: userData,
         socketId: socket.id,
       });
+      console.log(`emit onlineUsers 1 ${users}`);
       socket.broadcast.emit("onlineUsers", users);
     }
   });
