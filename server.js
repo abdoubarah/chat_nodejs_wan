@@ -15,7 +15,7 @@ socketio.on("connection", (socket) => {
     if (connectedUsers.length > 0) {
       var usr = connectedUsers.find((user) => user.idUser === userData.idUser);
       if (usr == undefined) {
-        userData.socketId = socket.id;
+        userData["socketId"] = socket.id;
         connectedUsers.push(userData);
         console.log(`emit user 1 ${JSON.stringify(connectedUsers)}`);
         socket.broadcast.emit("onlineUsers", connectedUsers);
@@ -23,13 +23,13 @@ socketio.on("connection", (socket) => {
         connectedUsers = connectedUsers.filter(
           (obj) => obj.idUser !== userData.idUser
         );
-        userData.socketId = socket.id;
+        userData["socketId"] = socket.id;
         connectedUsers.push(userData);
         console.log(`emit user 2 ${JSON.stringify(connectedUsers)}`);
         socket.broadcast.emit("onlineUsers", connectedUsers);
       }
     } else {
-      userData.socketId = socket.id;
+      userData["socketId"] = socket.id;
       connectedUsers.push(userData);
       console.log(`emit user 3 ${JSON.stringify(connectedUsers)}`);
       socket.broadcast.emit("onlineUsers", connectedUsers);
