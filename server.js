@@ -9,35 +9,27 @@ app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
 });
 
-//for reefrech
-
 socketio.on("connection", (socket) => {
   socket.on("userConnected", (userData) => {
     console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
     if (users.length > 0) {
       var usr = users.find((user) => user.idUser === userData.idUser);
       if (usr == undefined) {
-        users.push({
-          userData,
-          socketId: socket.id,
-        });
-        console.log(`emit onlineUsers 3 ${JSON.stringify(users)}`);
+        userData.socketId = socket.id;
+        users.push(userData);
+        console.log(`emit user 1 ${JSON.stringify(users)}`);
         socket.broadcast.emit("onlineUsers", users);
       } else {
         users = users.filter((obj) => obj.idUser !== userData.idUser);
-        users.push({
-          userData,
-          socketId: socket.id,
-        });
-        console.log(`emit onlineUsers 2 ${JSON.stringify(users)}`);
+        userData.socketId = socket.id;
+        users.push(userData);
+        console.log(`emit user 2 ${JSON.stringify(users)}`);
         socket.broadcast.emit("onlineUsers", users);
       }
     } else {
-      users.push({
-        userData,
-        socketId: socket.id,
-      });
-      console.log(`emit onlineUsers 1 ${JSON.stringify(users)}`);
+      userData.socketId = socket.id;
+      users.push(userData);
+      console.log(`emit user 3 ${JSON.stringify(users)}`);
       socket.broadcast.emit("onlineUsers", users);
     }
   });
