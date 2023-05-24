@@ -21,7 +21,7 @@ socketio.on("connection", (socket) => {
           userData,
           socketId: socket.id,
         });
-        console.log(`emit onlineUsers 3 ${users}`);
+        console.log(`emit onlineUsers 3 ${JSON.stringify(users)}`);
         socket.broadcast.emit("onlineUsers", users);
       } else {
         users = users.filter((obj) => obj.idUser !== userData.idUser);
@@ -29,7 +29,7 @@ socketio.on("connection", (socket) => {
           userData,
           socketId: socket.id,
         });
-        console.log(`emit onlineUsers 2 ${users}`);
+        console.log(`emit onlineUsers 2 ${JSON.stringify(users)}`);
         socket.broadcast.emit("onlineUsers", users);
       }
     } else {
@@ -37,7 +37,7 @@ socketio.on("connection", (socket) => {
         userData,
         socketId: socket.id,
       });
-      console.log(`emit onlineUsers 1 ${users}`);
+      console.log(`emit onlineUsers 1 ${JSON.stringify(users)}`);
       socket.broadcast.emit("onlineUsers", users);
     }
   });
