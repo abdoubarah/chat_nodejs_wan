@@ -3,7 +3,7 @@ const http = require("http").createServer(app);
 const socketio = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 
-var users = [];
+var connectedUsers = [];
 
 app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
@@ -12,25 +12,27 @@ app.get("/", (req, res) => {
 socketio.on("connection", (socket) => {
   socket.on("userConnected", (userData) => {
     console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
-    if (users.length > 0) {
-      var usr = users.find((user) => user.idUser === userData.idUser);
+    if (connectedUsers.length > 0) {
+      var usr = connectedUsers.find((user) => user.idUser === userData.idUser);
       if (usr == undefined) {
         userData.socketId = socket.id;
-        users.push(userData);
-        console.log(`emit user 1 ${JSON.stringify(users)}`);
-        socket.broadcast.emit("onlineUsers", users);
+        connectedUsers.push(userData);
+        console.log(`emit user 1 ${JSON.stringify(connectedUsers)}`);
+        socket.broadcast.emit("onlineUsers", connectedUsers);
       } else {
-        users = users.filter((obj) => obj.idUser !== userData.idUser);
+        connectedUsers = connectedUsers.filter(
+          (obj) => obj.idUser !== userData.idUser
+        );
         userData.socketId = socket.id;
-        users.push(userData);
-        console.log(`emit user 2 ${JSON.stringify(users)}`);
-        socket.broadcast.emit("onlineUsers", users);
+        connectedUsers.push(userData);
+        console.log(`emit user 2 ${JSON.stringify(connectedUsers)}`);
+        socket.broadcast.emit("onlineUsers", connectedUsers);
       }
     } else {
       userData.socketId = socket.id;
-      users.push(userData);
-      console.log(`emit user 3 ${JSON.stringify(users)}`);
-      socket.broadcast.emit("onlineUsers", users);
+      connectedUsers.push(userData);
+      console.log(`emit user 3 ${JSON.stringify(connectedUsers)}`);
+      socket.broadcast.emit("onlineUsers", connectedUsers);
     }
   });
 
