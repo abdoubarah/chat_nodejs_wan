@@ -104,13 +104,20 @@ socketio.on("connection", (socket) => {
 
   // Disconnect user
   socket.on("disconnect", (userData) => {
-    // console.log(`User disconnected: ${socket.id}`);
-    // const userId = users.find((user) => user.userId === user_id).userId;
-    // if (userId) {
-    //   delete users[userId];
-    // }
+    console.log(`User disconnected: ${socket.id}`);
+    removeUserById(userData.idUser);
   });
 });
+
+function removeUserById(idUser) {
+  // Create a new array excluding the user with the matching id
+  connectedUsers = connectedUsers.filter((user) => user.idUser !== idUser);
+  if (connectedUsers.length === 0) {
+    console.log(`User with id ${id} not found.`);
+  } else {
+    console.log(`User with id ${id} removed successfully.`);
+  }
+}
 
 http.listen(port, () => {
   console.log(`Server started on port ${port}`);
