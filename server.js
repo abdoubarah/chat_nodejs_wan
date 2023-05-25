@@ -113,9 +113,9 @@ function removeUserById(idUser) {
   // Create a new array excluding the user with the matching id
   connectedUsers = connectedUsers.filter((user) => user.idUser !== idUser);
   if (connectedUsers.length === 0) {
-    console.log(`User with id ${id} not found.`);
+    console.log(`User with id ${user.idUser} not found.`);
   } else {
-    console.log(`User with id ${id} removed successfully.`);
+    console.log(`User with id ${user.idUser} removed successfully.`);
   }
 }
 
