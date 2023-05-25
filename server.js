@@ -38,6 +38,7 @@ app.get("/", (req, res) => {
 socketio.on("connection", (socket) => {
   console.log(`A user connected. ${JSON.stringify(socket.id)}`);
 
+  // Show connetced users
   socket.on("userConnected", (userData) => {
     console.log(socket.id);
     const user = new UserModel(
@@ -58,19 +59,19 @@ socketio.on("connection", (socket) => {
       if (usr == undefined) {
         connectedUsers.push(user);
         console.log(`emit user 1 ${JSON.stringify(connectedUsers)}`);
-        socket.emit("onlineUsers", connectedUsers);
+        socket.broadcast.emit("onlineUsers", connectedUsers);
       } else {
         connectedUsers = connectedUsers.filter(
           (obj) => obj.idUser !== user.idUser
         );
         connectedUsers.push(user);
         console.log(`emit user 2 ${JSON.stringify(connectedUsers)}`);
-        socket.emit("onlineUsers", connectedUsers);
+        socket.broadcast.emit("onlineUsers", connectedUsers);
       }
     } else {
       connectedUsers.push(user);
       console.log(`emit user 3 ${JSON.stringify(connectedUsers)}`);
-      socket.emit("onlineUsers", connectedUsers);
+      socket.broadcast.emit("onlineUsers", connectedUsers);
     }
   });
 
@@ -103,23 +104,17 @@ socketio.on("connection", (socket) => {
   );
 
   // Disconnect user
-  socket.on("disconnect", (idUser) => {
+  socket.on("userDisconnected", (idUser) => {
     console.log(`User disconnected: ${idUser}`);
-    removeUserById(idUser);
+    connectedUsers = connectedUsers.filter((obj) => obj.idUser !== idUser);
+    if (connectedUsers.length === 0) {
+      console.log("Object not found or array is empty.");
+    } else {
+      console.log("Object removed successfully.");
+    }
+    socket.broadcast.emit("onlineUsers", connectedUsers);
   });
 });
-
-function removeUserById(idUser) {
-  // Create a new array excluding the user with the matching id
-  // Find the index of the user with the matching id
-  const index = connectedUsers.findIndex((user) => user.idUser === idUser);
-  if (index !== -1) {
-    connectedUsers.splice(index, 1);
-    console.log(`User with id ${idUser} removed successfully.`);
-  } else {
-    console.log(`User with id ${idUser} not found.`);
-  }
-}
 
 http.listen(port, () => {
   console.log(`Server started on port ${port}`);
