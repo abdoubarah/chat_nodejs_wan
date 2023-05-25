@@ -111,11 +111,13 @@ socketio.on("connection", (socket) => {
 
 function removeUserById(idUser) {
   // Create a new array excluding the user with the matching id
-  connectedUsers = connectedUsers.filter((user) => user.idUser !== idUser);
-  if (connectedUsers.length === 0) {
-    console.log(`User with id ${idUser} not found.`);
-  } else {
+  // Find the index of the user with the matching id
+  const index = connectedUsers.findIndex((user) => user.idUser === idUser);
+  if (index !== -1) {
+    connectedUsers.splice(index, 1);
     console.log(`User with id ${idUser} removed successfully.`);
+  } else {
+    console.log(`User with id ${idUser} not found.`);
   }
 }
 
