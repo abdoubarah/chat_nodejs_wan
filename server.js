@@ -5,34 +5,72 @@ const port = process.env.PORT || 3000;
 
 var connectedUsers = [];
 
+class UserModel {
+  constructor(
+    name,
+    idUser,
+    coins,
+    profileImg,
+    onlineStatus,
+    userType,
+    gender,
+    countryName,
+    countryFlag,
+    socketId
+  ) {
+    this.name = name;
+    this.idUser = idUser;
+    this.coins = coins;
+    this.profileImg = profileImg;
+    this.onlineStatus = onlineStatus;
+    this.userType = userType;
+    this.gender = gender;
+    this.countryName = countryName;
+    this.countryFlag = countryFlag;
+    this.socketId = socketId; // Initialize socketId as null
+  }
+}
+
 app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
 });
 
 socketio.on("connection", (socket) => {
+  console.log(`A user connected. ${JSON.stringify(socket.id)}`);
+
   socket.on("userConnected", (userData) => {
-    console.log(`userConnected id : ${userData} + socketid : ${socket.id}`);
+    console.log(socket.id);
+    const user = new UserModel(
+      userData.name,
+      userData.idUser,
+      userData.coins,
+      userData.profile_img,
+      userData.online_status,
+      userData.user_type,
+      userData.gender,
+      userData.country_name,
+      userData.country_flag,
+      socket.id
+    );
+
     if (connectedUsers.length > 0) {
-      var usr = connectedUsers.find((user) => user.idUser === userData.idUser);
+      var usr = connectedUsers.find((user) => user.idUser === user.idUser);
       if (usr == undefined) {
-        userData["socketId"] = socket.id;
-        connectedUsers.push(userData);
+        connectedUsers.push(user);
         console.log(`emit user 1 ${JSON.stringify(connectedUsers)}`);
-        socket.broadcast.emit("onlineUsers", connectedUsers);
+        socket.emit("onlineUsers", connectedUsers);
       } else {
         connectedUsers = connectedUsers.filter(
-          (obj) => obj.idUser !== userData.idUser
+          (obj) => obj.idUser !== user.idUser
         );
-        userData["socketId"] = socket.id;
-        connectedUsers.push(userData);
+        connectedUsers.push(user);
         console.log(`emit user 2 ${JSON.stringify(connectedUsers)}`);
-        socket.broadcast.emit("onlineUsers", connectedUsers);
+        socket.emit("onlineUsers", connectedUsers);
       }
     } else {
-      userData["socketId"] = socket.id;
-      connectedUsers.push(userData);
+      connectedUsers.push(user);
       console.log(`emit user 3 ${JSON.stringify(connectedUsers)}`);
-      socket.broadcast.emit("onlineUsers", connectedUsers);
+      socket.emit("onlineUsers", connectedUsers);
     }
   });
 
