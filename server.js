@@ -103,9 +103,9 @@ socketio.on("connection", (socket) => {
   );
 
   // Disconnect user
-  socket.on("disconnect", (userData) => {
-    console.log(`User disconnected: ${userData}`);
-    removeUserById(userData.idUser);
+  socket.on("disconnect", (idUser) => {
+    console.log(`User disconnected: ${idUser}`);
+    removeUserById(idUser);
   });
 });
 
