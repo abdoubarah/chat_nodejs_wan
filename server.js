@@ -1,6 +1,6 @@
 const app = require("express")();
 const http = require("http").createServer(app);
-const socketio = require("socket.io")(http);
+const io = require("socket.io")(http);
 const port = process.env.PORT || 3000;
 
 var connectedUsers = [];
@@ -27,7 +27,7 @@ class UserModel {
     this.gender = gender;
     this.countryName = countryName;
     this.countryFlag = countryFlag;
-    this.socketId = socketId; // Initialize socketId as null
+    this.socketId = socketId;
   }
 }
 
@@ -35,7 +35,7 @@ app.get("/", (req, res) => {
   res.send(`Server is running ${port}`);
 });
 
-socketio.on("connection", (socket) => {
+io.on("connection", (socket) => {
   console.log(`A user connected. ${JSON.stringify(socket.id)}`);
 
   // Show connetced users
@@ -54,25 +54,14 @@ socketio.on("connection", (socket) => {
       socket.id
     );
 
-    if (connectedUsers.length > 0) {
-      var usr = connectedUsers.find((user) => user.idUser === user.idUser);
-      if (usr == undefined) {
-        connectedUsers.push(user);
-        console.log(`emit user 1 ${JSON.stringify(connectedUsers)}`);
-        socket.broadcast.emit("onlineUsers", connectedUsers);
-      } else {
-        connectedUsers = connectedUsers.filter(
-          (obj) => obj.idUser !== user.idUser
-        );
-        connectedUsers.push(user);
-        console.log(`emit user 2 ${JSON.stringify(connectedUsers)}`);
-        socket.broadcast.emit("onlineUsers", connectedUsers);
-      }
-    } else {
+    const objectExists = connectedUsers.some(
+      (obj) => obj.idUser === user.idUser
+    );
+    if (!objectExists) {
       connectedUsers.push(user);
-      console.log(`emit user 3 ${JSON.stringify(connectedUsers)}`);
-      socket.broadcast.emit("onlineUsers", connectedUsers);
     }
+    console.log(`onlineUsers  ${JSON.stringify(connectedUsers.length)}`);
+    io.emit("onlineUsers", connectedUsers);
   });
 
   // Send message
@@ -84,7 +73,7 @@ socketio.on("connection", (socket) => {
           gift
         )}`
       );
-      var receiverSocketId = users.find(
+      var receiverSocketId = connectedUsers.find(
         (user) => user.idUser === receiver
       )?.socketId;
       console.log(`receiverSocketId ${receiverSocketId}`);
@@ -105,14 +94,15 @@ socketio.on("connection", (socket) => {
 
   // Disconnect user
   socket.on("userDisconnected", (idUser) => {
-    console.log(`User disconnected: ${idUser}`);
-    connectedUsers = connectedUsers.filter((obj) => obj.idUser !== idUser);
-    if (connectedUsers.length === 0) {
-      console.log("Object not found or array is empty.");
+    console.log(`Disconnected: ${idUser}`);
+    const index = connectedUsers.findIndex((obj) => obj.idUser == idUser);
+    if (index > -1) {
+      connectedUsers.splice(index, 1);
+      console.log(`Object removed successfully. ${idUser}`);
     } else {
-      console.log("Object removed successfully.");
+      console.log("Object not found or array is empty.");
     }
-    socket.broadcast.emit("onlineUsers", connectedUsers);
+    io.emit("onlineUsers", connectedUsers);
   });
 });
 
