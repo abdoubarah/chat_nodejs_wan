@@ -94,6 +94,7 @@ io.on("connection", (socket) => {
 
   // Stories refresh
   socket.on("onAddStory", (story) => {
+    console.log(`onEmitStory  ${JSON.stringify(story)}`);
     io.emit("onEmitStory", story);
   });
 
