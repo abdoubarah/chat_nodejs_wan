@@ -92,6 +92,11 @@ io.on("connection", (socket) => {
     }
   );
 
+  // Stories refresh
+  socket.on("onAddStory", (story) => {
+    io.emit("onEmitStory", story);
+  });
+
   // Disconnect user
   socket.on("userDisconnected", (idUser) => {
     console.log(`Disconnected: ${idUser}`);
