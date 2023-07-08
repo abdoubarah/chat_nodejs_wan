@@ -112,17 +112,14 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
 //videoCall
-const bodyParser = require('body-parser')
+const bodyParser = require("body-parser");
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 var men = [];
 var women = [];
-
 
 app.get("/m", (req, res) => {
   res.send(JSON.stringify(men));
@@ -138,32 +135,28 @@ app.get("/a", (req, res) => {
 
 app.post("/addm", (req, res) => {
   let data = req.body;
-  men.push(data['id']);
+  men.push(data["id"]);
   res.sendStatus(200);
 });
 
 app.post("/addw", (req, res) => {
   let data = req.body;
-  women.push(data['id']);
+  women.push(data["id"]);
   res.sendStatus(200);
 });
 
 app.post("/join", (req, res) => {
   let data = req.body;
-  if(men.includes(data['id'])){
-  const index = men.indexOf(data['id']);
-  men.splice(index, 1);
-  }else{
-    if(women.includes(data['id'])){
-      const index = women.indexOf(data['id']);
+  if (men.includes(data["id"])) {
+    const index = men.indexOf(data["id"]);
+    men.splice(index, 1);
+  } else {
+    if (women.includes(data["id"])) {
+      const index = women.indexOf(data["id"]);
       women.splice(index, 1);
     }
   }
   res.sendStatus(200);
-});
-
-app.listen(port, () => {
-  console.log(`Server started on port ${port}`);
 });
 
 http.listen(port, () => {
